@@ -137,6 +137,9 @@ func (s *spannerServer) PartitionRead(ctx context.Context, req *pb.PartitionRead
 }
 
 // Proxy allows to create Google Cloud Spanner proxy servers.
+// In order to override behavior, implement the functions.
+// If user calls an unimplemented function, the proxy will return
+// and error saying operation is not supported.
 type Proxy struct {
 	CreateSession       func(ctx context.Context, req *pb.CreateSessionRequest) (*pb.Session, error)
 	BatchCreateSessions func(ctx context.Context, req *pb.BatchCreateSessionsRequest) (*pb.BatchCreateSessionsResponse, error)
@@ -155,10 +158,13 @@ type Proxy struct {
 	PartitionRead       func(ctx context.Context, req *pb.PartitionReadRequest) (*pb.PartitionResponse, error)
 }
 
+// New creates a new proxy.
 func New() *Proxy {
 	return &Proxy{}
 }
 
+// Serve starts serving the proxy server on the given
+// listener with the specified options.
 func (p *Proxy) Serve(l net.Listener, opt ...grpc.ServerOption) error {
 	server := grpc.NewServer(opt...)
 	pb.RegisterSpannerServer(server, &spannerServer{proxy: p})
