@@ -30,13 +30,13 @@ func main() {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	proxy := proxy.New()
-	proxy.CreateSession = func(ctx context.Context, req *pb.CreateSessionRequest) (*pb.Session, error) {
+	p := proxy.New()
+	p.CreateSession = func(ctx context.Context, req *pb.CreateSessionRequest) (*pb.Session, error) {
 		// Your own session creation...
 		return &pb.Session{
 			Name:       "my-first-session",
 			CreateTime: ptypes.TimestampNow(),
 		}, nil
 	}
-	log.Fatal(proxy.Serve(lis))
+	log.Fatal(p.Serve(lis))
 }
