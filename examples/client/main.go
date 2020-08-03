@@ -16,27 +16,18 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
-	pb "google.golang.org/genproto/googleapis/spanner/v1"
-	"google.golang.org/grpc"
+	"cloud.google.com/go/spanner"
 )
 
 func main() {
+	// Set SPANNER_EMULATOR_HOST to localhost:9777
 	ctx := context.Background()
-	conn, err := grpc.Dial("localhost:9777", grpc.WithInsecure())
+	client, err := spanner.NewClient(ctx, "projects/PROJECT/instances/INSTANCE/databases/DATABASE")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer conn.Close()
 
-	client := pb.NewSpannerClient(conn)
-	session, err := client.CreateSession(ctx, &pb.CreateSessionRequest{
-		Database: "first-db",
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(session)
+	_ = client // use client
 }
