@@ -16,27 +16,27 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
+	"net"
 
+	"github.com/golang/protobuf/ptypes"
+	proxy "github.com/rakyll/spanner-proxy"
 	pb "google.golang.org/genproto/googleapis/spanner/v1"
-	"google.golang.org/grpc"
 )
 
 func main() {
-	ctx := context.Background()
-	conn, err := grpc.Dial("localhost:9777", grpc.WithInsecure())
+	lis, err := net.Listen("tcp", ":9777")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to listen: %v", err)
 	}
-	defer conn.Close()
 
-	client := pb.NewSpannerClient(conn)
-	session, err := client.CreateSession(ctx, &pb.CreateSessionRequest{
-		Database: "first-db",
-	})
-	if err != nil {
-		log.Fatal(err)
+	proxy := proxy.New()
+	proxy.CreateSession = func(ctx context.Context, req *pb.CreateSessionRequest) (*pb.Session, error) {
+		// Your own session creation...
+		return &pb.Session{
+			Name:       "my-first-session",
+			CreateTime: ptypes.TimestampNow(),
+		}, nil
 	}
-	fmt.Println(session)
+	log.Fatal(proxy.Serve(lis))
 }
