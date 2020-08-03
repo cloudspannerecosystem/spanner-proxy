@@ -44,4 +44,4 @@ Some examples:
 * To manage connections and sessions outside of application server. 
 * To instrument the Cloud Spanner calls in a custom way for monitoring
   and debugging purposes.
-* To handle authentication outside of the application server.
+* To handle the authentication to Cloud Spanner outside of the application servers.
