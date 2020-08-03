@@ -34,3 +34,14 @@ if err != nil {
 }
 defer conn.Close()
 ```
+
+## When to write a proxy server?
+
+There are various reasons you might want to write a proxy server.
+Some examples:
+
+* To override the behavior of the Cloud Spanner API.
+* To manage connections and sessions outside of application server. 
+* To instrument the Cloud Spanner calls in a custom way for monitoring
+  and debugging purposes.
+* To handle authentication outside of the application server.
