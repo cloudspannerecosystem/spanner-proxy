@@ -19,8 +19,8 @@ import (
 	"log"
 	"net"
 
+	proxy "github.com/cloudspannerecosystem/spanner-proxy"
 	"github.com/golang/protobuf/ptypes"
-	proxy "github.com/rakyll/spanner-proxy"
 	pb "google.golang.org/genproto/googleapis/spanner/v1"
 )
 
